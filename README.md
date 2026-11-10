@@ -91,7 +91,6 @@ Acesse a aplicação no navegador via: `http://localhost:8080`
 
 ## 👨‍💻 Autores e Colaboradores
 
-* Luiz Henrique
 * Derik da Silva Rocha
 * Kawan Weber
 * Beatria Batista
