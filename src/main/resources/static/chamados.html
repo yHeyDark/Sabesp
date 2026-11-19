@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sabesp | Central GeoSaneamento Operacional</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="app-layout">
+
+    <!-- ========================================================
+         SIDEBAR VERTICAL MODERNA (SABESP PRO)
+         ======================================================== -->
+    <aside class="app-sidebar" id="appSidebar">
+        <!-- Brand Header -->
+        <div class="sidebar-header">
+            <a href="/" class="brand-wrapper" title="Ir para a Página Inicial">
+                <div class="brand-logo-badge">
+                    <!-- Logo Sabesp - Estilo Corporativo -->
+                    <svg width="26" height="26" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="sabespGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#0033A0;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#0056B3;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <!-- Gotas de água estilizadas -->
+                        <path d="M50 20 C35 20 25 35 25 50 C25 65 35 80 50 80 C65 80 75 65 75 50 C75 35 65 20 50 20 Z" fill="url(#sabespGradient)"/>
+                        <circle cx="50" cy="50" r="12" fill="white"/>
+                        <path d="M42 50 L50 42 L58 50" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="brand-meta">
+                    <h2>SABESP</h2>
+                    <p>Saneamento Básico do Estado de São Paulo</p>
+                </div>
+            </a>
+            <div class="network-live-pill">
+                <span class="pulse-dot"></span>
+                <span>Rede de Esgoto Conectada</span>
+            </div>
+        </div>
+
+        <!-- Menu de Navegação -->
+        <nav class="sidebar-nav">
+            <div class="nav-category">Operação & Atendimento</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <button class="sidebar-btn nav-btn active" data-view="view-dashboard">
+                        <span class="btn-icon">📊</span>
+                        <span>Meu Painel</span>
+                    </button>
+                </li>
+                <li>
+                    <button class="sidebar-btn nav-btn" data-view="view-chamados">
+                        <span class="btn-icon">📋</span>
+                        <span>Fila de Chamados</span>
+                    </button>
+                </li>
+                <li>
+                    <button class="sidebar-btn nav-btn" data-view="view-novo">
+                        <span class="btn-icon">➕</span>
+                        <span>Abrir Ocorrência</span>
+                    </button>
+                </li>
+            </ul>
+
+            <div class="nav-category" id="categoriaAdmin">Gestão Técnica</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <button class="sidebar-btn nav-btn" data-view="view-cadastros" id="navBtnCadastros" style="display: none;">
+                        <span class="btn-icon">👥</span>
+                        <span>Base de Cadastros</span>
+                    </button>
+                </li>
+                <li>
+                    <a href="/swagger-ui.html" target="_blank" class="sidebar-btn">
+                        <span class="btn-icon">⚡</span>
+                        <span>Documentação API</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/" class="sidebar-btn">
+                        <span class="btn-icon">🏠</span>
+                        <span>Página Institucional</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Perfil Ativo & Switcher Rápido de Acesso (RBAC 1-Clique) -->
+        <div class="sidebar-user-card" id="userAuthBar">
+            <!-- Usuário Logado -->
+            <div id="userInfoLogged">
+                <div class="user-profile-summary">
+                    <div class="user-avatar-circle" id="userAvatarChar">U</div>
+                    <div class="user-details-text">
+                        <div class="user-name-title" id="navUserNome">Carregando...</div>
+                        <span id="navUserBadge" class="status-pill andamento" style="font-size: 0.68rem; padding: 1px 6px;">
+                            Identificando...
+                        </span>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" onclick="fazerLogout()" title="Sair / Trocar" style="padding: 4px 8px; font-size: 0.75rem;">
+                        Sair
+                    </button>
+                </div>
+            </div>
+
+            <!-- Não autenticado -->
+            <div id="userInfoGuest" style="display: none; margin-bottom: 0.75rem;">
+                <button class="btn btn-primary" onclick="abrirModalLogin()" style="width: 100%; font-size: 0.85rem; padding: 0.6rem;">
+                    🔐 Entrar na Conta
+                </button>
+            </div>
+
+            <!-- Switcher Rápido de Perfis (REMOVIDO - Acesso por login individual) -->
+        </div>
+    </aside>
+
+    <!-- ========================================================
+         ÁREA PRINCIPAL DE CONTEÚDO
+         ======================================================== -->
+    <main class="app-main">
+
+        <!-- Top Bar Superior -->
+        <header class="app-topbar">
+            <div class="topbar-left">
+                <div class="page-title-badge">
+                    <span>Central de Atendimento a Ocorrências de Esgoto</span>
+                </div>
+                <div class="role-permission-callout" id="roleDescriptionCallout">
+                    <span>Nível de Acesso: <strong>Carregando...</strong></span>
+                </div>
+            </div>
+
+            <div class="topbar-right">
+                <button class="btn btn-primary btn-sm" onclick="document.querySelector('.nav-btn[data-view=\'view-novo\']').click()">
+                    <span>+ Abrir Chamado</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Conteúdo Interno -->
+        <div class="content-wrapper">
+
+            <!-- Banner Contextual do Perfil (Mostra ao usuário o que seu perfil faz) -->
+            <section class="role-hero-banner" id="bannerContextual">
+                <div class="role-banner-text">
+                    <h3 id="bannerTitulo">Portal Unificado de Saneamento</h3>
+                    <p id="bannerDescricao">Acompanhe as solicitações de manutenção de esgoto e fiscalize os prazos de atendimento.</p>
+                </div>
+                <div class="role-banner-actions">
+                    <button class="btn btn-secondary btn-sm" onclick="carregarChamados()">
+                        🔄 Atualizar Dados
+                    </button>
+                </div>
+            </section>
+
+            <!-- Métricas Rápidas Operacionais (KPIs) -->
+            <section class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-data">
+                        <h4>Total de Chamados</h4>
+                        <div class="kpi-number" id="statTotal">0</div>
+                    </div>
+                    <div class="kpi-icon-badge kpi-icon-total">📁</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-data">
+                        <h4>Aguardando Triagem</h4>
+                        <div class="kpi-number" id="statAbertos" style="color: #d97706;">0</div>
+                    </div>
+                    <div class="kpi-icon-badge kpi-icon-abertos">⏳</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-data">
+                        <h4>Em Execução / Campo</h4>
+                        <div class="kpi-number" id="statAndamento" style="color: #0284c7;">0</div>
+                    </div>
+                    <div class="kpi-icon-badge kpi-icon-andamento">🚜</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-data">
+                        <h4>Rede Normalizada</h4>
+                        <div class="kpi-number" id="statResolvidos" style="color: #059669;">0</div>
+                    </div>
+                    <div class="kpi-icon-badge kpi-icon-resolvidos">✅</div>
+                </div>
+            </section>
+
+            <!-- ====================================================
+                 VIEW 1: DASHBOARD
+                 ==================================================== -->
+            <section id="view-dashboard" class="view-panel active">
+                <div class="pro-card">
+                    <div class="pro-card-header">
+                        <div class="card-title-group">
+                            <h3>📌 Monitoramento de Incidentes de Esgoto</h3>
+                            <p>Registro, despacho e fiscalização de problemas em redes coletoras, extravasamentos e bueiros</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="document.querySelector('.nav-btn[data-view=\'view-novo\']').click()">
+                            + Registrar Ocorrência
+                        </button>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+                        <div style="background: #f8fafc; border: 1px solid var(--sabesp-border); border-radius: var(--radius-md); padding: 1.5rem;">
+                            <h4 style="font-size: 1rem; color: var(--sabesp-navy); margin-bottom: 0.5rem;">
+                                📸 Evidência Fotográfica Obrigatória
+                            </h4>
+                            <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6;">
+                                Todas as ocorrências registradas passam por análise visual técnica da equipe de engenharia da Sabesp. Fotos aceleram o envio do caminhão hidrojateador correto.
+                            </p>
+                        </div>
+                        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: var(--radius-md); padding: 1.5rem;">
+                            <h4 style="font-size: 1rem; color: #166534; margin-bottom: 0.5rem;">
+                                🛡️ Resolução Técnica e SLA
+                            </h4>
+                            <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6;">
+                                Equipes da Sabesp operam 24/7. Fiscais da Prefeitura auditam as ordens de serviço em tempo real por meio deste canal.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================
+                 VIEW 2: FILA DE CHAMADOS (COM FOTOS EM DESTAQUE)
+                 ==================================================== -->
+            <section id="view-chamados" class="view-panel">
+                <div class="pro-card">
+                    <div class="pro-card-header">
+                        <div class="card-title-group">
+                            <h3>📋 Fila de Chamados e Ocorrências</h3>
+                            <p id="subtituloChamados">Visualização das solicitações de reparo e fiscalização</p>
+                        </div>
+
+                        <!-- Filtros Avançados -->
+                        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+                            <select id="filtroOrigem" style="width: 175px; font-weight: 700;">
+                                <option value="TODOS">🌐 Toda a Cidade</option>
+                                <option value="MEUS">👤 Meus Chamados</option>
+                            </select>
+
+                            <input type="text" id="filtroBusca" placeholder="🔍 Buscar rua, bairro, solicitante..." style="width: 240px;">
+
+                            <select id="filtroStatus" style="width: 170px;">
+                                <option value="TODOS">Todos os Status</option>
+                            </select>
+
+                            <button class="btn btn-secondary btn-sm" onclick="carregarChamados()" title="Recarregar">
+                                🔄
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tabela de Chamados com Foto -->
+                    <div class="table-responsive">
+                        <table class="pro-table">
+                            <thead>
+                                <tr>
+                                    <th>Protocolo</th>
+                                    <th>Foto Evidência</th>
+                                    <th>Tipo de Problema</th>
+                                    <th>Localidade / Bairro</th>
+                                    <th>Solicitante</th>
+                                    <th>Status Operacional</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaChamadosCorpo">
+                                <!-- Preenchido dinamicamente via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================
+                 VIEW 3: NOVO CHAMADO COM UPLOAD DE FOTO
+                 ==================================================== -->
+            <section id="view-novo" class="view-panel">
+                <div class="pro-card" style="max-width: 900px; margin: 0 auto;">
+                    <div class="pro-card-header">
+                        <div class="card-title-group">
+                            <h3>🚨 Abrir Nova Ocorrência de Esgoto</h3>
+                            <p>Preencha os dados e anexe a foto da situação para despacho emergencial</p>
+                        </div>
+                    </div>
+
+                    <form id="formNovoChamado">
+                        <!-- Etapa 1: Solicitante e Status -->
+                        <div class="form-grid-3">
+                            <div class="form-group" id="grupoUsuarioSolicitante">
+                                <label for="chamadoUsuario">Cidadão Solicitante *</label>
+                                <select id="chamadoUsuario" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="chamadoEndereco">Endereço da Ocorrência *</label>
+                                <select id="chamadoEndereco" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="chamadoTipoProblema">Classificação do Problema *</label>
+                                <select id="chamadoTipoProblema" required></select>
+                            </div>
+                        </div>
+
+                        <div class="form-grid-3">
+                            <div class="form-group">
+                                <label for="chamadoStatus">Status Inicial *</label>
+                                <select id="chamadoStatus" required></select>
+                            </div>
+                        </div>
+
+                        <!-- Etapa 2: Descrição Detalhada -->
+                        <div class="form-group" style="margin-bottom: 1.25rem;">
+                            <label for="chamadoDescricao">Descrição do Problema & Ponto de Referência *</label>
+                            <textarea id="chamadoDescricao" placeholder="Ex: Esgoto transbordando na calçada em frente à padaria, com forte odor e risco de contaminação..." required></textarea>
+                        </div>
+
+                        <!-- Etapa 3: Upload de Foto de Evidência -->
+                        <div class="form-group" style="margin-bottom: 1.75rem;">
+                            <label>📷 Foto da Ocorrência (Evidência Fotográfica de Campo)</label>
+                            
+                            <div class="photo-dropzone-box" onclick="document.getElementById('chamadoImagemArquivo').click()">
+                                <input type="file" id="chamadoImagemArquivo" accept="image/*" style="display: none;">
+                                <div style="font-size: 2rem; margin-bottom: 0.35rem;">📸</div>
+                                <div style="font-weight: 700; color: var(--sabesp-primary);">Clique para selecionar a foto da ocorrência</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">Suporta PNG, JPEG, fotos de celular • Até 10MB</div>
+                            </div>
+
+                            <div id="previewImagemContainer" style="display: none; margin-top: 1rem; background: #f8fafc; padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--sabesp-border);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                                    <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-primary);">Pré-visualização da Foto Anexada:</span>
+                                    <button type="button" id="btnRemoverImagem" class="btn btn-danger btn-sm">
+                                        🗑️ Remover Foto
+                                    </button>
+                                </div>
+                                <img id="previewImagem" src="" alt="Foto Selecionada" style="max-height: 220px; max-width: 100%; border-radius: var(--radius-sm); border: 1px solid #cbd5e1; object-fit: contain;">
+                            </div>
+                        </div>
+
+                        <div style="display: flex; justify-content: flex-end; gap: 1rem; border-top: 1px solid var(--sabesp-border); padding-top: 1.25rem;">
+                            <button type="reset" class="btn btn-secondary">Limpar Formulário</button>
+                            <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.75rem;">
+                                🚀 Registrar Chamado Oficial
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- ====================================================
+                 VIEW 4: CADASTROS (APENAS PARA SABESP)
+                 ==================================================== -->
+            <section id="view-cadastros" class="view-panel">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.75rem;">
+                    
+                    <!-- Novo Usuário -->
+                    <div class="pro-card">
+                        <div class="pro-card-header">
+                            <div class="card-title-group">
+                                <h3>👤 Cadastrar Novo Usuário</h3>
+                                <p>Criação de novos cidadãos ou operadores técnicos</p>
+                            </div>
+                        </div>
+                        <form id="formRapidoUsuario">
+                            <div class="form-group" style="margin-bottom: 0.85rem;">
+                                <label>Nome Completo *</label>
+                                <input type="text" id="userNome" required placeholder="Ex: Ana Paula Ribeiro">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0.85rem;">
+                                <label>E-mail *</label>
+                                <input type="email" id="userEmail" required placeholder="ana@email.com">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0.85rem;">
+                                <label>Telefone</label>
+                                <input type="text" id="userTelefone" placeholder="(11) 98888-7777">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 1.25rem;">
+                                <label>Perfil de Acesso</label>
+                                <select id="userTipo">
+                                    <option value="COMUM">Cidadão Comum</option>
+                                    <option value="SABESP">Técnico Sabesp</option>
+                                    <option value="PREFEITURA">Fiscalização Prefeitura</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">Salvar Usuário</button>
+                        </form>
+                    </div>
+
+                    <!-- Novo Endereço -->
+                    <div class="pro-card">
+                        <div class="pro-card-header">
+                            <div class="card-title-group">
+                                <h3>📍 Cadastrar Novo Endereço</h3>
+                                <p>Inclusão de logradouros na malha operacional</p>
+                            </div>
+                        </div>
+                        <form id="formRapidoEndereco">
+                            <div class="form-group" style="margin-bottom: 0.75rem;">
+                                <label>Logradouro / Rua *</label>
+                                <input type="text" id="endLogradouro" required placeholder="Ex: Av. Brigadeiro Faria Lima">
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem;">
+                                <div class="form-group">
+                                    <label>Número</label>
+                                    <input type="text" id="endNumero" placeholder="1000">
+                                </div>
+                                <div class="form-group">
+                                    <label>Complemento</label>
+                                    <input type="text" id="endComplemento" placeholder="Esquina">
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem;">
+                                <div class="form-group">
+                                    <label>Bairro *</label>
+                                    <input type="text" id="endBairro" required placeholder="Pinheiros">
+                                </div>
+                                <div class="form-group">
+                                    <label>Cidade *</label>
+                                    <input type="text" id="endCidade" required value="São Paulo">
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 80px 1fr; gap: 0.75rem; margin-bottom: 1.25rem;">
+                                <div class="form-group">
+                                    <label>UF</label>
+                                    <input type="text" id="endEstado" required value="SP" maxlength="2">
+                                </div>
+                                <div class="form-group">
+                                    <label>CEP *</label>
+                                    <input type="text" id="endCep" required placeholder="05426-100">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">Salvar Endereço</button>
+                        </form>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+</div>
+
+<!-- ============================================================
+     MODAL DE ANÁLISE COMPLETA DO CHAMADO & FOTOS (#modalDetalhes)
+     ============================================================ -->
+<div class="modal-overlay" id="modalDetalhes">
+    <div class="modal-dialog-inspection">
+        
+        <!-- Header do Modal -->
+        <div class="modal-header-inspection">
+            <h3>
+                <span>🔍 Inspeção de Ocorrência</span>
+                <span id="modalChamadoId" style="font-family: var(--font-mono); color: var(--sabesp-cyan);">#0</span>
+            </h3>
+            <button class="close-modal-btn" onclick="fecharModal()">&times;</button>
+        </div>
+
+        <div class="modal-body-split">
+            
+            <!-- Coluna 1: Evidência Fotográfica & Despacho Técnico -->
+            <div>
+                <!-- Card de Foto -->
+                <div class="evidence-photo-card" style="margin-bottom: 1.25rem;">
+                    <div class="evidence-photo-header">
+                        <span>📸 EVIDÊNCIA DE CAMPO</span>
+                        <button class="btn btn-secondary btn-sm" onclick="expandirFotoLightbox()" style="padding: 2px 8px; font-size: 0.72rem;">
+                            🔎 Tela Cheia
+                        </button>
+                    </div>
+                    <div class="evidence-photo-container" id="detalheImagemContainer">
+                        <img id="detalheImagem" class="evidence-photo-img" src="" alt="Foto da Ocorrência" onclick="expandirFotoLightbox()" title="Clique para ampliar">
+                        <div class="evidence-zoom-hint">🔍 Clique para expandir</div>
+                    </div>
+                    <div id="semFotoAviso" style="display: none; padding: 2.5rem 1rem; text-align: center; color: #94a3b8;">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">📷</div>
+                        <p style="font-size: 0.85rem;">Nenhuma foto foi anexada neste chamado.</p>
+                    </div>
+                </div>
+
+                <!-- Painel Técnico de Alteração de Status (Visível APENAS para SABESP e PREFEITURA) -->
+                <div id="painelTecnicoStatus" class="technical-dispatch-box" style="display: none;">
+                    <div class="tech-box-header">
+                        <h4>🛠️ Despacho Técnico Sabesp</h4>
+                        <span class="status-pill andamento" style="font-size: 0.68rem;">Acesso de Engenharia</span>
+                    </div>
+                    <p style="font-size: 0.8rem; color: #065f46; margin-bottom: 0.75rem;">
+                        Altere o status operacional após o envio de caminhão ou conclusão da obra na via:
+                    </p>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <select id="modalNovoStatus" style="flex: 1; font-weight: 700;"></select>
+                        <button class="btn btn-primary btn-sm" onclick="salvarStatusChamadoModal()">
+                            Salvar Novo Status
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Painel Informativo para Cidadão Comum (Não técnico) -->
+                <div id="painelCidadaoInfo" style="display: none; background: #e0f2fe; border: 1px solid #bae6fd; border-radius: var(--radius-md); padding: 1rem;">
+                    <div style="font-weight: 700; color: #0369a1; font-size: 0.85rem; margin-bottom: 0.25rem;">
+                        ℹ️ Acompanhamento do Cidadão
+                    </div>
+                    <p style="font-size: 0.8rem; color: #0c4a6e; line-height: 1.5;">
+                        Sua ocorrência está sendo monitorada pela engenharia da Sabesp. O status atual reflete o andamento da equipe em campo.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Coluna 2: Ficha Técnica & Linha do Tempo de Comentários -->
+            <div>
+                <!-- Resumo dos Dados -->
+                <div style="background: #f8fafc; border: 1px solid var(--sabesp-border); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.25rem;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-bottom: 0.75rem;">
+                        <div>
+                            <label style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">CLASSIFICAÇÃO</label>
+                            <p style="font-weight: 700; font-size: 0.95rem; color: var(--sabesp-navy);" id="detalheTipo">-</p>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">STATUS ATUAL</label>
+                            <p id="detalheStatus" style="font-weight: 700; font-size: 0.95rem;">-</p>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 0.75rem;">
+                        <label style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">LOCAL DA OCORRÊNCIA</label>
+                        <p id="detalheEndereco" style="font-size: 0.88rem; color: var(--text-primary); font-weight: 500;">-</p>
+                    </div>
+                    <div style="margin-bottom: 0.75rem;">
+                        <label style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">SOLICITANTE</label>
+                        <p id="detalheSolicitante" style="font-size: 0.88rem; color: var(--text-primary);">-</p>
+                    </div>
+                    <div>
+                        <label style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">RELATO DETALHADO</label>
+                        <p id="detalheDescricao" style="font-size: 0.88rem; background: white; padding: 0.6rem 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--sabesp-border); line-height: 1.5;">-</p>
+                    </div>
+                </div>
+
+                <!-- Histórico e Comentários -->
+                <div>
+                    <h4 style="font-size: 0.9rem; font-weight: 800; color: var(--sabesp-navy); margin-bottom: 0.65rem;">
+                        💬 Linha do Tempo & Despachos
+                    </h4>
+                    <div class="timeline-container" id="listaComentarios">
+                        <!-- Preenchido via JS -->
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; margin-top: 0.85rem;">
+                        <input type="text" id="novoComentarioTexto" placeholder="Escreva uma atualização técnica ou pergunta..." style="flex: 1;">
+                        <button class="btn btn-primary" onclick="enviarComentario()">Enviar</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================
+     LIGHTBOX DE FOTO EM TELA CHEIA (#modalFotoLightbox)
+     ============================================================ -->
+<div class="modal-overlay" id="modalFotoLightbox" onclick="fecharFotoLightbox()">
+    <div style="position: relative; max-width: 90vw; max-height: 90vh; display: flex; align-items: center; justify-content: center;" onclick="event.stopPropagation()">
+        <button class="close-modal-btn" onclick="fecharFotoLightbox()" style="position: absolute; top: -15px; right: -15px; background: #dc2626; z-index: 10;">&times;</button>
+        <img id="lightboxImg" src="" alt="Foto Ampliada" style="max-width: 90vw; max-height: 85vh; border-radius: var(--radius-md); box-shadow: 0 10px 40px rgba(0,0,0,0.8); object-fit: contain;">
+    </div>
+</div>
+
+<!-- ============================================================
+     MODAL DE LOGIN E IDENTIFICAÇÃO (#modalLogin)
+     ============================================================ -->
+<div class="modal-overlay" id="modalLogin">
+    <div class="modal-dialog-inspection" style="max-width: 460px;">
+        <div class="modal-header-inspection">
+            <h3>🔐 Autenticação de Usuário</h3>
+            <button class="close-modal-btn" onclick="fecharModalLogin()">&times;</button>
+        </div>
+        <div style="padding: 1.75rem;">
+            <!-- Abas Login / Registro -->
+            <div style="display: flex; gap: 0.5rem; border-bottom: 2px solid var(--sabesp-border); margin-bottom: 1.5rem;">
+                <button id="tabBtnLogin" class="btn" style="flex: 1; border-radius: 6px 6px 0 0; background: #e0f2fe; color: var(--sabesp-primary); font-weight: 800;" onclick="alternarAbaAuth('login')">
+                    Entrar
+                </button>
+                <button id="tabBtnRegistro" class="btn" style="flex: 1; border-radius: 6px 6px 0 0; background: transparent; color: var(--text-muted);" onclick="alternarAbaAuth('registro')">
+                    Criar Conta
+                </button>
+            </div>
+
+            <!-- Formulário de Login -->
+            <div id="abaAuthLogin">
+                <form id="formLogin">
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label>E-mail Corporativo ou Pessoal *</label>
+                        <input type="email" id="loginEmail" required placeholder="exemplo@email.com">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label>Senha de Acesso *</label>
+                        <input type="password" id="loginSenha" required placeholder="Digite sua senha">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.85rem;">
+                        Entrar no Sistema
+                    </button>
+                </form>
+
+                <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px dashed var(--sabesp-border);">
+                    <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.65rem;">
+                        ⚡ Contas de Teste Pré-Configuradas (1 Clique):
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+                        <button type="button" class="btn btn-secondary btn-sm" style="justify-content: space-between;" onclick="loginRapido('carlos.silva@email.com', '123456')">
+                            <span>👤 Carlos Silva</span>
+                            <span class="status-pill aberto" style="font-size: 0.68rem;">CIDADÃO COMUM</span>
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-sm" style="justify-content: space-between;" onclick="loginRapido('marina.santos@sabesp.com.br', 'admin123')">
+                            <span>🛠️ Eng. Marina</span>
+                            <span class="status-pill andamento" style="font-size: 0.68rem;">TÉCNICO SABESP</span>
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-sm" style="justify-content: space-between;" onclick="loginRapido('fiscalizacao@prefeitura.sp.gov.br', 'pref123')">
+                            <span>🏛️ Fiscalização SP</span>
+                            <span class="status-pill resolvido" style="font-size: 0.68rem;">PREFEITURA</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulário de Registro -->
+            <div id="abaAuthRegistro" style="display: none;">
+                <form id="formRegistroPublico">
+                    <div class="form-group" style="margin-bottom: 0.75rem;">
+                        <label>Nome Completo *</label>
+                        <input type="text" id="regNome" required placeholder="Ex: Lucas Ferreira">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0.75rem;">
+                        <label>E-mail *</label>
+                        <input type="email" id="regEmail" required placeholder="lucas@email.com">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0.75rem;">
+                        <label>Telefone</label>
+                        <input type="text" id="regTelefone" placeholder="(11) 97777-6666">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1.25rem;">
+                        <label>Senha *</label>
+                        <input type="password" id="regSenha" required placeholder="Crie uma senha forte">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.85rem;">
+                        Concluir Cadastro de Cidadão
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Container de Toasts Flutuantes -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="/js/app.js"></script>
+</body>
+</html>
