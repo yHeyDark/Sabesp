@@ -2,7 +2,7 @@
 
 Sistema **Java Web** desenvolvido com **Spring Boot** para a **Secretaria de Meio Ambiente de Santos**, com o objetivo de registrar, gerenciar e acompanhar chamados relacionados a problemas de infraestrutura de esgoto na cidade.
 
-> 🎓 Projeto acadêmico desenvolvido para a disciplina de Spring Boot – **Fatec Baixada Santista - Rubens Lara (Fatec RL)**.
+> 🎓 Projeto acadêmico desenvolvido para a disciplina de Desenvolvimento para Servidores I – **Fatec Baixada Santista - Rubens Lara (Fatec RL)**.
 
 ---
 
