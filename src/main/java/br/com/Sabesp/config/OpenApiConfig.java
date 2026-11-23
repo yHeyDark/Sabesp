@@ -7,9 +7,23 @@ import io.swagger.v3.oas.models.info.License;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Configuração do OpenAPI/springdoc da API de chamados de esgoto.
+ *
+ * <p>Define os metadados (título, descrição, versão, contato e licença)
+ * exibidos na documentação Swagger disponível em {@code /swagger-ui.html}.</p>
+ *
+ * @author Equipe Sabesp
+ */
 @Configuration
 public class OpenApiConfig {
 
+    /**
+     * Cria o bean {@link OpenAPI} com as informações gerais da documentação.
+     *
+     * @return objeto {@link OpenAPI} configurado com título, descrição,
+     *         versão, contato e licença da API
+     */
     @Bean
     public OpenAPI sabespOpenAPI() {
         return new OpenAPI()

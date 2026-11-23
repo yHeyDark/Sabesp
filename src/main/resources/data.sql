@@ -19,10 +19,17 @@ INSERT INTO tipo_problema (descricao) VALUES ('Rede de Esgoto Danificada');
 INSERT INTO tipo_problema (descricao) VALUES ('Outros');
 
 -- ============================================================
--- Seed Data — Usuários Iniciais (Apenas Prefeitura para testes formais)
+-- Seed Data — Usuários de Demonstração (login manual)
+-- Cidadão, Técnico Sabesp e Prefeitura para testes
 -- ============================================================
 INSERT INTO usuario (nome, email, senha, telefone, tipo_usuario, data_cadastro)
-VALUES ('Prefeitura Municipal de Santos - Fiscalização', 'fiscalizacao@santos.sp.gov.br', 'santos2026', '(13) 3218-4000', 'PREFEITURA', CURRENT_TIMESTAMP);
+VALUES ('Carlos Eduardo Silva', 'carlos.silva@email.com', '123456', '(11) 98765-4321', 'COMUM', CURRENT_TIMESTAMP);
+
+INSERT INTO usuario (nome, email, senha, telefone, tipo_usuario, data_cadastro)
+VALUES ('Eng. Marina Sabesp', 'marina.santos@sabesp.com.br', 'admin123', '(11) 97777-1111', 'SABESP', CURRENT_TIMESTAMP);
+
+INSERT INTO usuario (nome, email, senha, telefone, tipo_usuario, data_cadastro)
+VALUES ('Fiscalização Prefeitura SP', 'fiscalizacao@prefeitura.sp.gov.br', 'pref123', '(11) 3113-8000', 'PREFEITURA', CURRENT_TIMESTAMP);
 
 -- ============================================================
 -- Seed Data — Endereços Iniciais

@@ -7,6 +7,15 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+/**
+ * Entidade que representa um filtro de pesquisa salvo por um usuário do
+ * perfil Prefeitura. Guarda os critérios de consulta (período, tipo de
+ * problema, status, bairro e cidade) utilizados para monitorar os chamados
+ * de esgoto do município.
+ *
+ * @author Equipe Sabesp
+ * @since 2026
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

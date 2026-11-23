@@ -10,6 +10,16 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Entidade que representa um chamado (relato) de problema de esgoto aberto
+ * por um cidadão no município de Santos. Armazena a data, a hora, a
+ * descrição e a foto do problema relatado, além das referências para o
+ * usuário que abriu, o endereço onde ocorreu, o tipo de problema e o status
+ * atual do atendimento.
+ *
+ * @author Equipe Sabesp
+ * @since 2026
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

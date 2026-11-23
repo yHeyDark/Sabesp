@@ -10,6 +10,16 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Entidade que representa um usuário do sistema de chamados de esgoto da
+ * Secretaria de Meio Ambiente de Santos. Um usuário pode ter o perfil de
+ * Cidadão (COMUM), que abre e acompanha chamados, de Sabesp, que executa os
+ * atendimentos, ou de Prefeitura, que monitora e filtra os chamados do
+ * município.
+ *
+ * @author Equipe Sabesp
+ * @since 2026
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

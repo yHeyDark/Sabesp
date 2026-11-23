@@ -78,15 +78,25 @@
                     </button>
                 </li>
                 <li>
-                    <a href="/swagger-ui.html" target="_blank" class="sidebar-btn">
-                        <span class="btn-icon">⚡</span>
-                        <span>Documentação API</span>
-                    </a>
-                </li>
-                <li>
                     <a href="/" class="sidebar-btn">
                         <span class="btn-icon">🏠</span>
                         <span>Página Institucional</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="nav-category">Acesso Institucional</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="/login-sabesp.html" class="sidebar-btn">
+                        <span class="btn-icon">🛠️</span>
+                        <span>Portal Sabesp</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/login-prefeitura.html" class="sidebar-btn">
+                        <span class="btn-icon">🏛️</span>
+                        <span>Portal Prefeitura</span>
                     </a>
                 </li>
             </ul>
@@ -355,17 +365,19 @@
             </section>
 
             <!-- ====================================================
-                 VIEW 4: CADASTROS (APENAS PARA SABESP)
+                 VIEW 4: CADASTROS
+                 • Contas de usuário (institucionais): SOMENTE Prefeitura
+                 • Endereço (base operacional): SOMENTE Sabesp
                  ==================================================== -->
             <section id="view-cadastros" class="view-panel">
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.75rem;">
                     
-                    <!-- Novo Usuário -->
-                    <div class="pro-card">
+                    <!-- Novo Usuário (contas institucionais — apenas Prefeitura) -->
+                    <div class="pro-card" id="cardNovoUsuario">
                         <div class="pro-card-header">
                             <div class="card-title-group">
                                 <h3>👤 Cadastrar Novo Usuário</h3>
-                                <p>Criação de novos cidadãos ou operadores técnicos</p>
+                                <p>Criação de contas institucionais (Sabesp/Prefeitura). Cidadãos se auto-cadastram.</p>
                             </div>
                         </div>
                         <form id="formRapidoUsuario">
@@ -383,8 +395,9 @@
                             </div>
                             <div class="form-group" style="margin-bottom: 1.25rem;">
                                 <label>Perfil de Acesso</label>
+                                <!-- Sem opção COMUM: cidadãos não são criados por aqui
+                                     (auto-cadastro público em /api/auth/registro) -->
                                 <select id="userTipo">
-                                    <option value="COMUM">Cidadão Comum</option>
                                     <option value="SABESP">Técnico Sabesp</option>
                                     <option value="PREFEITURA">Fiscalização Prefeitura</option>
                                 </select>
@@ -394,7 +407,7 @@
                     </div>
 
                     <!-- Novo Endereço -->
-                    <div class="pro-card">
+                    <div class="pro-card" id="cardNovoEndereco">
                         <div class="pro-card-header">
                             <div class="card-title-group">
                                 <h3>📍 Cadastrar Novo Endereço</h3>
@@ -571,85 +584,169 @@
 </div>
 
 <!-- ============================================================
-     MODAL DE LOGIN E IDENTIFICAÇÃO (#modalLogin)
+     MODAL DE AUTENTICAÇÃO (#modalLogin)
+     Contém 3 telas: Entrar, Criar Conta e Recuperar Senha
      ============================================================ -->
 <div class="modal-overlay" id="modalLogin">
-    <div class="modal-dialog-inspection" style="max-width: 460px;">
-        <div class="modal-header-inspection">
-            <h3>🔐 Autenticação de Usuário</h3>
-            <button class="close-modal-btn" onclick="fecharModalLogin()">&times;</button>
-        </div>
-        <div style="padding: 1.75rem;">
-            <!-- Abas Login / Registro -->
-            <div style="display: flex; gap: 0.5rem; border-bottom: 2px solid var(--sabesp-border); margin-bottom: 1.5rem;">
-                <button id="tabBtnLogin" class="btn" style="flex: 1; border-radius: 6px 6px 0 0; background: #e0f2fe; color: var(--sabesp-primary); font-weight: 800;" onclick="alternarAbaAuth('login')">
-                    Entrar
-                </button>
-                <button id="tabBtnRegistro" class="btn" style="flex: 1; border-radius: 6px 6px 0 0; background: transparent; color: var(--text-muted);" onclick="alternarAbaAuth('registro')">
-                    Criar Conta
-                </button>
-            </div>
+    <div class="modal-dialog-inspection" style="max-width: 440px;">
 
-            <!-- Formulário de Login -->
+        <!-- Cabeçalho do modal -->
+        <div class="modal-header-inspection">
+            <h3 id="modalLoginTitulo">🔐 Entrar — Central do Cidadão</h3>
+            <button class="close-modal-btn" onclick="fecharModalLogin()" aria-label="Fechar">&times;</button>
+        </div>
+
+        <div style="padding: 1.5rem;">
+
+            <!-- ══════════════════════════════════════════════
+                 TELA 1: LOGIN
+                 ══════════════════════════════════════════════ -->
             <div id="abaAuthLogin">
-                <form id="formLogin">
-                    <div class="form-group" style="margin-bottom: 1rem;">
-                        <label>E-mail Corporativo ou Pessoal *</label>
-                        <input type="email" id="loginEmail" required placeholder="exemplo@email.com">
+                <form id="formLogin" novalidate>
+                    <!-- E-mail -->
+                    <div class="form-group">
+                        <label for="loginEmail">E-mail *</label>
+                        <input type="email" id="loginEmail" required placeholder="seuemail@exemplo.com">
                     </div>
-                    <div class="form-group" style="margin-bottom: 1.5rem;">
-                        <label>Senha de Acesso *</label>
+
+                    <!-- Senha + link de recuperação -->
+                    <div class="form-group">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
+                            <label for="loginSenha" style="margin:0;">Senha *</label>
+                            <a href="#" onclick="alternarAbaAuth('recuperar'); return false;"
+                               style="font-size:0.75rem; font-weight:600; color:var(--sabesp-primary); text-decoration:none;">
+                                Esqueci minha senha
+                            </a>
+                        </div>
                         <input type="password" id="loginSenha" required placeholder="Digite sua senha">
                     </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.85rem;">
-                        Entrar no Sistema
+
+                    <!-- Botão de entrar -->
+                    <button type="submit" class="btn btn-primary" style="width:100%; padding:0.85rem; margin-top:0.5rem;">
+                        Entrar
                     </button>
                 </form>
 
-                <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px dashed var(--sabesp-border);">
-                    <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.65rem;">
-                        ⚡ Contas de Teste Pré-Configuradas (1 Clique):
+                <!-- Divisor "ou" -->
+                <div style="display:flex; align-items:center; gap:0.75rem; margin:1.25rem 0; color:var(--text-muted); font-size:0.78rem;">
+                    <span style="flex:1; height:1px; background:var(--sabesp-border);"></span>
+                    ou
+                    <span style="flex:1; height:1px; background:var(--sabesp-border);"></span>
+                </div>
+
+                <!-- Atalho para criar conta -->
+                <button type="button" class="btn btn-secondary" style="width:100%; padding:0.7rem;"
+                        onclick="alternarAbaAuth('registro')">
+                    📝 Criar conta de cidadão
+                </button>
+
+                <!-- Acesso das equipes institucionais (páginas dedicadas) -->
+                <div style="margin-top:1.1rem; padding-top:0.9rem; border-top:1px dashed var(--sabesp-border); text-align:center;">
+                    <div style="font-size:0.72rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:0.55rem;">
+                        🏢 Acesso Institucional
                     </div>
-                    <div style="display: flex; flex-direction: column; gap: 0.4rem;">
-                        <button type="button" class="btn btn-secondary btn-sm" style="justify-content: space-between;" onclick="loginRapido('carlos.silva@email.com', '123456')">
-                            <span>👤 Carlos Silva</span>
-                            <span class="status-pill aberto" style="font-size: 0.68rem;">CIDADÃO COMUM</span>
-                        </button>
-                        <button type="button" class="btn btn-secondary btn-sm" style="justify-content: space-between;" onclick="loginRapido('marina.santos@sabesp.com.br', 'admin123')">
-                            <span>🛠️ Eng. Marina</span>
-                            <span class="status-pill andamento" style="font-size: 0.68rem;">TÉCNICO SABESP</span>
-                        </button>
-                        <button type="button" class="btn btn-secondary btn-sm" style="justify-content: space-between;" onclick="loginRapido('fiscalizacao@prefeitura.sp.gov.br', 'pref123')">
-                            <span>🏛️ Fiscalização SP</span>
-                            <span class="status-pill resolvido" style="font-size: 0.68rem;">PREFEITURA</span>
-                        </button>
+                    <div style="display:flex; gap:0.5rem;">
+                        <a href="/login-sabesp.html" class="btn btn-secondary btn-sm" style="flex:1; text-decoration:none; justify-content:center;">
+                            🛠️ Portal Sabesp
+                        </a>
+                        <a href="/login-prefeitura.html" class="btn btn-secondary btn-sm" style="flex:1; text-decoration:none; justify-content:center;">
+                            🏛️ Portal Prefeitura
+                        </a>
                     </div>
                 </div>
             </div>
 
-            <!-- Formulário de Registro -->
-            <div id="abaAuthRegistro" style="display: none;">
-                <form id="formRegistroPublico">
-                    <div class="form-group" style="margin-bottom: 0.75rem;">
-                        <label>Nome Completo *</label>
+            <!-- ══════════════════════════════════════════════
+                 TELA 2: CRIAR CONTA (CIDADÃO)
+                 ══════════════════════════════════════════════ -->
+            <div id="abaAuthRegistro" style="display:none;">
+                <form id="formRegistroPublico" novalidate>
+                    <!-- Nome -->
+                    <div class="form-group">
+                        <label for="regNome">Nome completo *</label>
                         <input type="text" id="regNome" required placeholder="Ex: Lucas Ferreira">
                     </div>
-                    <div class="form-group" style="margin-bottom: 0.75rem;">
-                        <label>E-mail *</label>
-                        <input type="email" id="regEmail" required placeholder="lucas@email.com">
+
+                    <!-- E-mail -->
+                    <div class="form-group">
+                        <label for="regEmail">E-mail *</label>
+                        <input type="email" id="regEmail" required placeholder="seuemail@exemplo.com">
                     </div>
-                    <div class="form-group" style="margin-bottom: 0.75rem;">
-                        <label>Telefone</label>
+
+                    <!-- Telefone (opcional) -->
+                    <div class="form-group">
+                        <label for="regTelefone">Telefone <span style="color:var(--text-muted); font-weight:400;">(opcional)</span></label>
                         <input type="text" id="regTelefone" placeholder="(11) 97777-6666">
                     </div>
-                    <div class="form-group" style="margin-bottom: 1.25rem;">
-                        <label>Senha *</label>
-                        <input type="password" id="regSenha" required placeholder="Crie uma senha forte">
+
+                    <!-- Senha -->
+                    <div class="form-group">
+                        <label for="regSenha">Crie uma senha *</label>
+                        <input type="password" id="regSenha" required placeholder="Mínimo 6 caracteres" minlength="6">
                     </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.85rem;">
-                        Concluir Cadastro de Cidadão
+
+                    <!-- Confirmação de senha -->
+                    <div class="form-group">
+                        <label for="regSenhaConfirm">Confirme a senha *</label>
+                        <input type="password" id="regSenhaConfirm" required placeholder="Repita a senha">
+                    </div>
+
+                    <!-- Botão de cadastrar -->
+                    <button type="submit" class="btn btn-primary" style="width:100%; padding:0.85rem; margin-top:0.5rem;">
+                        Criar minha conta
                     </button>
                 </form>
+
+                <!-- Voltar para login -->
+                <div style="text-align:center; margin-top:1rem;">
+                    <a href="#" onclick="alternarAbaAuth('login'); return false;"
+                       style="font-size:0.82rem; color:var(--text-muted); text-decoration:none;">
+                        ← Já tenho conta, quero entrar
+                    </a>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════
+                 TELA 3: RECUPERAR SENHA
+                 ══════════════════════════════════════════════ -->
+            <div id="abaAuthRecuperar" style="display:none;">
+                <!-- Explicação do fluxo -->
+                <p style="font-size:0.85rem; color:var(--text-muted); margin:0 0 1rem; line-height:1.5;">
+                    Informe o e-mail cadastrado e escolha uma nova senha. Se a conta existir, a senha será atualizada.
+                </p>
+
+                <form id="formRecuperarSenha" novalidate>
+                    <!-- E-mail da conta -->
+                    <div class="form-group">
+                        <label for="recEmail">E-mail da conta *</label>
+                        <input type="email" id="recEmail" required placeholder="seuemail@exemplo.com">
+                    </div>
+
+                    <!-- Nova senha -->
+                    <div class="form-group">
+                        <label for="recNovaSenha">Nova senha *</label>
+                        <input type="password" id="recNovaSenha" required placeholder="Mínimo 6 caracteres" minlength="6">
+                    </div>
+
+                    <!-- Confirmar nova senha -->
+                    <div class="form-group">
+                        <label for="recNovaSenhaConfirm">Confirme a nova senha *</label>
+                        <input type="password" id="recNovaSenhaConfirm" required placeholder="Repita a nova senha">
+                    </div>
+
+                    <!-- Botão de salvar -->
+                    <button type="submit" class="btn btn-primary" style="width:100%; padding:0.85rem; margin-top:0.5rem;">
+                        Redefinir senha
+                    </button>
+                </form>
+
+                <!-- Voltar para login -->
+                <div style="text-align:center; margin-top:1rem;">
+                    <a href="#" onclick="alternarAbaAuth('login'); return false;"
+                       style="font-size:0.82rem; color:var(--text-muted); text-decoration:none;">
+                        ← Voltar para o login
+                    </a>
+                </div>
             </div>
 
         </div>

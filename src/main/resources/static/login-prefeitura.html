@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Prefeitura — Fiscalização Municipal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- data-portal-role define que este portal só aceita contas PREFEITURA -->
+<body data-portal-role="PREFEITURA">
+
+<div class="portal-layout">
+
+    <!-- ═══════════════════════════════════════════
+         PAINEL ESQUERDO — identidade Prefeitura
+         ═══════════════════════════════════════════ -->
+    <aside class="portal-brand">
+        <a href="/" class="portal-brand__logo">
+            <!-- Brasão simplificado da Prefeitura -->
+            <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="100" height="100" rx="20" fill="#7C3AED"/>
+                <path d="M50 18L22 38V46H78V38L50 18Z" fill="white"/>
+                <rect x="28" y="52" width="10" height="24" fill="white"/>
+                <rect x="45" y="52" width="10" height="24" fill="white"/>
+                <rect x="62" y="52" width="10" height="24" fill="white"/>
+                <rect x="22" y="80" width="56" height="6" rx="2" fill="white"/>
+            </svg>
+            <div class="brand-text">
+                <span class="brand-title">Prefeitura de Santos</span>
+                <span class="brand-subtitle">Secretaria de Meio Ambiente</span>
+            </div>
+        </a>
+
+        <div>
+            <span class="portal-brand__badge">🏛️ Acesso Restrito — Fiscalização</span>
+            <h1>Painel de Fiscalização Municipal</h1>
+            <p class="portal-brand__lead">
+                Ambiente exclusivo da equipe de fiscalização da Secretaria de Meio Ambiente
+                para auditar os chamados de esgoto da cidade.
+            </p>
+            <ul class="portal-brand__features">
+                <li>Consultar e filtrar todas as ocorrências</li>
+                <li>Acompanhar prazos e status de atendimento</li>
+                <li>Emitir pareceres e pareceres técnicos</li>
+                <li>Monitorar o desempenho da Sabesp</li>
+            </ul>
+        </div>
+
+        <a href="/" class="portal-brand__back">← Voltar ao site institucional</a>
+    </aside>
+
+    <!-- ═══════════════════════════════════════════
+         PAINEL DIREITO — formulário de acesso
+         ═══════════════════════════════════════════ -->
+    <main class="portal-form-side">
+        <div class="portal-card">
+
+            <!-- Mensagem de erro/sucesso (inicialmente oculta) -->
+            <div id="portalAlert" class="portal-alert" style="display: none;"></div>
+
+            <h2 id="portalTitulo">Entrar no Portal Prefeitura</h2>
+            <p id="portalSubtitulo" class="portal-card__subtitle">
+                Acesso exclusivo da equipe de fiscalização. Cidadãos devem usar a Central de Chamados.
+            </p>
+
+            <!-- TELA 1: LOGIN -->
+            <form id="formPortalLogin" novalidate>
+                <div class="form-group">
+                    <label for="portalEmail">E-mail institucional *</label>
+                    <input type="email" id="portalEmail" required
+                           placeholder="nome@santos.sp.gov.br" autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="portalSenha">Senha *</label>
+                    <input type="password" id="portalSenha" required
+                           placeholder="Digite sua senha" autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn btn-primary portal-submit">
+                    Entrar no Painel
+                </button>
+            </form>
+
+            <!-- TELA 2: RECUPERAR SENHA -->
+            <form id="formPortalRecuperar" style="display: none;" novalidate>
+                <div class="form-group">
+                    <label for="recPortalEmail">E-mail da conta *</label>
+                    <input type="email" id="recPortalEmail" required
+                           placeholder="nome@santos.sp.gov.br" autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="recPortalSenha">Nova senha *</label>
+                    <input type="password" id="recPortalSenha" required
+                           placeholder="Mínimo 6 caracteres" minlength="6" autocomplete="new-password">
+                </div>
+                <div class="form-group">
+                    <label for="recPortalSenhaConfirm">Confirme a nova senha *</label>
+                    <input type="password" id="recPortalSenhaConfirm" required
+                           placeholder="Repita a nova senha" minlength="6" autocomplete="new-password">
+                </div>
+                <button type="submit" class="btn btn-primary portal-submit">
+                    Redefinir senha
+                </button>
+            </form>
+
+            <!-- Links secundários -->
+            <div class="portal-links">
+                <a href="#" id="linkEsqueciSenha">🔑 Esqueci minha senha</a>
+                <a href="#" id="linkVoltarLogin" style="display: none;">← Voltar ao login</a>
+                <a href="/chamados">Sou cidadão</a>
+            </div>
+
+        </div>
+    </main>
+
+</div>
+
+<script src="/js/portal-login.js"></script>
+<script>
+    // Esconde/mostra o link "Voltar" junto com a troca de tela
+    const _formLogin = document.getElementById("formPortalLogin");
+    const _formRec = document.getElementById("formPortalRecuperar");
+    const _obs = () => {
+        document.getElementById("linkEsqueciSenha").style.display =
+            _formLogin.style.display === "none" ? "none" : "inline";
+        document.getElementById("linkVoltarLogin").style.display =
+            _formLogin.style.display === "none" ? "inline" : "none";
+    };
+    new MutationObserver(_obs).observe(_formLogin, { attributes: true, attributeFilter: ["style"] });
+</script>
+
+</body>
+</html>

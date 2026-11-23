@@ -8,6 +8,14 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Entidade que representa uma conta do perfil Prefeitura: o órgão municipal
+ * (Secretaria de Meio Ambiente de Santos) que acompanha e monitora os
+ * chamados de esgoto, criando filtros de pesquisa para consulta.
+ *
+ * @author Equipe Sabesp
+ * @since 2026
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

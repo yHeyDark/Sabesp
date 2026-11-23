@@ -28,7 +28,7 @@
                 </div>
             </a>
 
-            <nav class="nav-links">
+            <nav class="nav-links" id="navLinks">
                 <a href="#sobre" class="nav-btn" style="text-decoration: none;">
                     🏢 Sobre Nós
                 </a>
@@ -44,10 +44,15 @@
                 <a href="/chamados" class="nav-btn landing-nav-highlight" style="text-decoration: none;">
                     📋 Central de Chamados
                 </a>
-                <a href="/swagger-ui.html" target="_blank" class="nav-swagger-btn">
-                    <span>⚡ API Docs</span>
+                <a href="/corporativo.html" class="nav-btn nav-corp-btn" style="text-decoration: none;">
+                    🔒 Área Corporativa
                 </a>
             </nav>
+
+            <!-- Botão do menu hambúrguer (aparece só no celular) -->
+            <button class="nav-toggle" id="navToggle" aria-label="Abrir menu de navegação" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </header>
 
@@ -301,10 +306,32 @@
             <a href="#sobre">Sobre a Sabesp</a>
             <a href="#servicos">Serviços</a>
             <a href="/chamados">Sistema de Chamados</a>
-            <a href="/swagger-ui.html" target="_blank">Documentação da API (Swagger)</a>
+            <a href="/corporativo.html">Área Corporativa</a>
         </div>
         <p>© 2026 Companhia de Saneamento Básico do Estado de São Paulo - Sabesp. Todos os direitos reservados.</p>
     </footer>
+
+    <!-- ============================================================
+         MENU HAMBÚRGUER (responsivo)
+         Abre/fecha o menu de navegação em telas pequenas.
+         ============================================================ -->
+    <script>
+        const navToggle = document.getElementById("navToggle");
+        const navLinks = document.getElementById("navLinks");
+
+        navToggle.addEventListener("click", () => {
+            const aberto = navLinks.classList.toggle("open");
+            navToggle.setAttribute("aria-expanded", String(aberto));
+        });
+
+        // Ao clicar em um link do menu, fecha-o (volta ao modo desktop)
+        navLinks.querySelectorAll("a").forEach(link => {
+            link.addEventListener("click", () => {
+                navLinks.classList.remove("open");
+                navToggle.setAttribute("aria-expanded", "false");
+            });
+        });
+    </script>
 
 </body>
 </html>

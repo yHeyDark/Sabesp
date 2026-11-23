@@ -8,6 +8,15 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Entidade de referência que representa um tipo de problema de esgoto que
+ * pode ser relatado em um chamado (catálogo de tipos, como entupimento ou
+ * despejo irregular). É usada como chave estrangeira para classificar os
+ * chamados abertos pelos cidadãos.
+ *
+ * @author Equipe Sabesp
+ * @since 2026
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

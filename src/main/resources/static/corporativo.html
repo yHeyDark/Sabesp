@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área Corporativa — Acesso Institucional</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="corp-page">
+
+    <!-- Cabeçalho da área corporativa -->
+    <header class="corp-header">
+        <a href="/" class="corp-brand">
+            <!-- Logo vetorial da Sabesp -->
+            <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="100" height="100" rx="20" fill="#0072BC"/>
+                <path d="M50 20C36 38 28 50 28 62C28 74.15 37.85 84 50 84C62.15 84 72 74.15 72 62C72 50 64 38 50 20Z" fill="white"/>
+                <path d="M50 32C42 45 37 54 37 62C37 69.18 42.82 75 50 75C57.18 75 63 69.18 63 62C63 54 58 45 50 32Z" fill="#29B6F6"/>
+                <circle cx="50" cy="62" r="6" fill="white"/>
+            </svg>
+            <div class="brand-text">
+                <span class="brand-title">sabesp</span>
+                <span class="brand-subtitle">Companhia de Saneamento Básico</span>
+            </div>
+        </a>
+        <a href="/" class="corp-back">← Voltar ao site institucional</a>
+    </header>
+
+    <!-- Conteúdo: escolha do portal -->
+    <main class="corp-main">
+        <span class="corp-badge">🔒 Área Corporativa — Acesso Restrito</span>
+        <h1>Escolha o seu portal de acesso</h1>
+        <p class="corp-lead">
+            Este ambiente é exclusivo para as equipes parceiras. Selecione o portal
+            da sua instituição para entrar com as suas credenciais.
+        </p>
+
+        <div class="corp-cards">
+
+            <!-- Card: Portal Sabesp -->
+            <a href="/login-sabesp.html" class="corp-card corp-card--sabesp">
+                <div class="corp-card-icon">🛠️</div>
+                <h2>Portal Sabesp</h2>
+                <p>Acesso da equipe técnica e de engenharia: alteração de status, laudos e gestão de cadastros.</p>
+                <span class="corp-card-cta">Entrar no Portal Sabesp →</span>
+            </a>
+
+            <!-- Card: Portal Prefeitura -->
+            <a href="/login-prefeitura.html" class="corp-card corp-card--prefeitura">
+                <div class="corp-card-icon">🏛️</div>
+                <h2>Portal Prefeitura</h2>
+                <p>Acesso da fiscalização municipal: auditoria de ocorrências, filtros e pareceres técnicos.</p>
+                <span class="corp-card-cta">Entrar no Portal Prefeitura →</span>
+            </a>
+
+        </div>
+
+        <!-- Aviso para cidadãos -->
+        <div class="corp-citizen-note">
+            📋 <strong>É cidadão?</strong> Abra e acompanhe os seus chamados de esgoto na
+            <a href="/chamados">Central de Chamados</a>.
+        </div>
+    </main>
+
+</div>
+
+</body>
+</html>

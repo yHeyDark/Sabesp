@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Sabesp — Acesso Técnico</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- data-portal-role define que este portal só aceita contas SABESP -->
+<body data-portal-role="SABESP">
+
+<div class="portal-layout">
+
+    <!-- ═══════════════════════════════════════════
+         PAINEL ESQUERDO — identidade Sabesp
+         ═══════════════════════════════════════════ -->
+    <aside class="portal-brand">
+        <a href="/" class="portal-brand__logo">
+            <!-- Logo vetorial da Sabesp -->
+            <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="100" height="100" rx="20" fill="#0072BC"/>
+                <path d="M50 20C36 38 28 50 28 62C28 74.15 37.85 84 50 84C62.15 84 72 74.15 72 62C72 50 64 38 50 20Z" fill="white"/>
+                <path d="M50 32C42 45 37 54 37 62C37 69.18 42.82 75 50 75C57.18 75 63 69.18 63 62C63 54 58 45 50 32Z" fill="#29B6F6"/>
+                <circle cx="50" cy="62" r="6" fill="white"/>
+            </svg>
+            <div class="brand-text">
+                <span class="brand-title">sabesp</span>
+                <span class="brand-subtitle">Companhia de Saneamento Básico</span>
+            </div>
+        </a>
+
+        <div>
+            <span class="portal-brand__badge">🔒 Acesso Restrito — Equipe Técnica</span>
+            <h1>Central Operacional Sabesp</h1>
+            <p class="portal-brand__lead">
+                Ambiente exclusivo dos técnicos e engenheiros responsáveis pelo atendimento
+                de ocorrências de esgoto na cidade de Santos.
+            </p>
+            <ul class="portal-brand__features">
+                <li>Alterar status de ocorrências em campo</li>
+                <li>Registrar fotos de evidência e laudos</li>
+                <li>Gerenciar a base de cadastros</li>
+                <li>Responder aos cidadãos e à fiscalização</li>
+            </ul>
+        </div>
+
+        <a href="/" class="portal-brand__back">← Voltar ao site institucional</a>
+    </aside>
+
+    <!-- ═══════════════════════════════════════════
+         PAINEL DIREITO — formulário de acesso
+         ═══════════════════════════════════════════ -->
+    <main class="portal-form-side">
+        <div class="portal-card">
+
+            <!-- Mensagem de erro/sucesso (inicialmente oculta) -->
+            <div id="portalAlert" class="portal-alert" style="display: none;"></div>
+
+            <h2 id="portalTitulo">Entrar no Portal Sabesp</h2>
+            <p id="portalSubtitulo" class="portal-card__subtitle">
+                Acesso exclusivo da equipe Sabesp. Cidadãos devem usar a Central de Chamados.
+            </p>
+
+            <!-- TELA 1: LOGIN -->
+            <form id="formPortalLogin" novalidate>
+                <div class="form-group">
+                    <label for="portalEmail">E-mail corporativo *</label>
+                    <input type="email" id="portalEmail" required
+                           placeholder="nome@sabesp.com.br" autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="portalSenha">Senha *</label>
+                    <input type="password" id="portalSenha" required
+                           placeholder="Digite sua senha" autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn btn-primary portal-submit">
+                    Entrar na Central
+                </button>
+            </form>
+
+            <!-- TELA 2: RECUPERAR SENHA -->
+            <form id="formPortalRecuperar" style="display: none;" novalidate>
+                <div class="form-group">
+                    <label for="recPortalEmail">E-mail da conta *</label>
+                    <input type="email" id="recPortalEmail" required
+                           placeholder="nome@sabesp.com.br" autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="recPortalSenha">Nova senha *</label>
+                    <input type="password" id="recPortalSenha" required
+                           placeholder="Mínimo 6 caracteres" minlength="6" autocomplete="new-password">
+                </div>
+                <div class="form-group">
+                    <label for="recPortalSenhaConfirm">Confirme a nova senha *</label>
+                    <input type="password" id="recPortalSenhaConfirm" required
+                           placeholder="Repita a nova senha" minlength="6" autocomplete="new-password">
+                </div>
+                <button type="submit" class="btn btn-primary portal-submit">
+                    Redefinir senha
+                </button>
+            </form>
+
+            <!-- Links secundários -->
+            <div class="portal-links">
+                <a href="#" id="linkEsqueciSenha">🔑 Esqueci minha senha</a>
+                <a href="#" id="linkVoltarLogin" style="display: none;">← Voltar ao login</a>
+                <a href="/chamados">Sou cidadão</a>
+            </div>
+
+        </div>
+    </main>
+
+</div>
+
+<script src="/js/portal-login.js"></script>
+<script>
+    // Esconde/mostra o link "Voltar" junto com a troca de tela
+    const _formLogin = document.getElementById("formPortalLogin");
+    const _formRec = document.getElementById("formPortalRecuperar");
+    const _obs = () => {
+        document.getElementById("linkEsqueciSenha").style.display =
+            _formLogin.style.display === "none" ? "none" : "inline";
+        document.getElementById("linkVoltarLogin").style.display =
+            _formLogin.style.display === "none" ? "inline" : "none";
+    };
+    new MutationObserver(_obs).observe(_formLogin, { attributes: true, attributeFilter: ["style"] });
+</script>
+
+</body>
+</html>

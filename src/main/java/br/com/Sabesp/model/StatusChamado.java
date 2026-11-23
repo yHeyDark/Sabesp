@@ -8,6 +8,15 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Entidade de referência que representa o status de um chamado no domínio do
+ * sistema. É a tabela persistida usada como chave estrangeira nos chamados,
+ * com uma descrição única que identifica em que etapa do atendimento o
+ * chamado se encontra (aberto, em andamento, resolvido ou fechado).
+ *
+ * @author Equipe Sabesp
+ * @since 2026
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

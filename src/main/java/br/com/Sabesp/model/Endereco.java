@@ -8,6 +8,15 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Entidade que representa o endereço onde um problema de esgoto foi
+ * relatado. É compartilhada entre chamados do mesmo local e guarda logradouro,
+ * número, bairro, cidade, estado e CEP, permitindo a localização e a
+ * filtragem geográfica dos chamados do município de Santos.
+ *
+ * @author Equipe Sabesp
+ * @since 2026
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

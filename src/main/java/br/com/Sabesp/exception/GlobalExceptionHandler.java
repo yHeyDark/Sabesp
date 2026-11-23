@@ -10,9 +10,24 @@ import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Tratamento global de exceções da aplicação.
+ *
+ * <p>Centraliza a resposta de erros da API em um formato padronizado
+ * (timestamp, status, erro e mensagem) para as principais exceções
+ * lançadas durante o atendimento das requisições REST.</p>
+ *
+ * @author Equipe Sabesp
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    /**
+     * Trata {@link ResourceNotFoundException} respondendo com HTTP 404.
+     *
+     * @param ex exceção de recurso não encontrado
+     * @return resposta com status 404 e corpo padronizado de erro
+     */
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleResourceNotFound(ResourceNotFoundException ex) {
         Map<String, Object> body = new LinkedHashMap<>();

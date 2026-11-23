@@ -73,13 +73,14 @@ img { max-width: 100%; display: block; }
 .brand-text { display: flex; flex-direction: column; line-height: 1.15; }
 .brand-title { font-size: 1.4rem; font-weight: 800; color: var(--sabesp-navy); letter-spacing: -0.5px; text-transform: lowercase; }
 .brand-subtitle { font-size: 0.68rem; color: var(--text-muted); font-weight: 600; max-width: 200px; }
-.nav-links { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; justify-content: flex-end; }
+.nav-links { display: flex; align-items: center; gap: 0.25rem; flex-wrap: wrap; justify-content: flex-end; }
 .nav-btn {
-    padding: 0.5rem 0.8rem;
+    padding: 0.5rem 0.62rem;
     border-radius: var(--radius-sm);
     color: var(--text-secondary);
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.84rem;
+    white-space: nowrap;
     transition: color .2s, background .2s;
 }
 .nav-btn:hover { color: var(--sabesp-primary); background: #e0f2fe; }
@@ -89,21 +90,69 @@ img { max-width: 100%; display: block; }
     box-shadow: 0 2px 10px rgba(2, 132, 199, .35);
 }
 .landing-nav-highlight:hover { background: var(--sabesp-primary-dark) !important; }
-.nav-swagger-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    padding: 0.5rem 0.75rem;
-    border: 1px solid var(--sabesp-border);
-    border-radius: var(--radius-sm);
-    background: #fff;
-    color: var(--sabesp-navy);
-    font-size: 0.78rem;
+
+/* Botão "Área Corporativa" — visual de acesso institucional */
+.nav-corp-btn {
+    border: 1.5px solid var(--sabesp-navy);
+    color: var(--sabesp-navy) !important;
     font-weight: 700;
-    text-decoration: none;
-    transition: background .2s;
+    background: #fff;
 }
-.nav-swagger-btn:hover { background: #f0f9ff; }
+.nav-corp-btn:hover { background: var(--sabesp-navy) !important; color: #fff !important; }
+
+/* Botão hambúrguer — exibido apenas em telas pequenas */
+.nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 42px;
+    height: 42px;
+    padding: 8px;
+    background: #fff;
+    border: 1.5px solid var(--sabesp-border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+}
+.nav-toggle span {
+    display: block;
+    height: 2.5px;
+    width: 100%;
+    background: var(--sabesp-navy);
+    border-radius: 2px;
+    transition: transform .25s ease, opacity .25s ease;
+}
+/* Estado "aberto": as barrinhas viram um X */
+.nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+
+/* ── Menu mobile (≤ 1200px) ────────────────────────────── */
+@media(max-width: 1200px) {
+    .nav-container { position: relative; flex-wrap: wrap; }
+    .nav-toggle { display: flex; }
+
+    /* Menu fechado por padrão: só o botão aparece */
+    .nav-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.35rem;
+        padding: 0.6rem 0 0.4rem;
+        border-top: 1px solid var(--sabesp-border);
+        margin-top: 0.6rem;
+    }
+    .nav-links.open { display: flex; }
+    .nav-links .nav-btn {
+        text-align: center;
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+        background: #f8fafc;
+    }
+    .nav-links .landing-nav-highlight { background: var(--sabesp-primary); }
+    .nav-links .nav-corp-btn { background: #fff; }
+}
 
 .hero {
     background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 60%, #cffafe 100%);
@@ -216,6 +265,7 @@ img { max-width: 100%; display: block; }
 .metrics-section { background: var(--sabesp-navy); padding: 3.5rem 1.5rem; }
 .metrics-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
 @media(max-width: 900px) { .metrics-container { grid-template-columns: repeat(2, 1fr); } }
+@media(max-width: 480px) { .metrics-container { grid-template-columns: 1fr; } }
 .metric-box { text-align: center; color: #fff; }
 .metric-box h3 { font-size: 2.5rem; color: #7dd3fc; margin: 0 0 0.35rem; letter-spacing: -0.03em; }
 .metric-box p { color: #cbd5e1; font-size: 0.9rem; margin: 0; line-height: 1.4; }
@@ -614,7 +664,399 @@ input, select, textarea { font: inherit; }
 .btn-hero, .landing-nav-highlight { cursor: pointer; }
 .helper-text { color: var(--text-muted); font-size: 0.82rem; }
 
+/* ══════════════════════════════════════════════
+   MODAL DE AUTENTICAÇÃO — visual moderno
+   ══════════════════════════════════════════════ */
+#modalLogin .modal-dialog-inspection {
+    max-width: 420px;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(7, 30, 51, .35);
+    animation: modalEntrada .25s ease;
+}
+@keyframes modalEntrada {
+    from { opacity: 0; transform: translateY(12px) scale(.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Cabeçalho com gradiente azul Sabesp */
+#modalLogin .modal-header-inspection {
+    background: linear-gradient(135deg, var(--sabesp-navy) 0%, #0c4a6e 100%);
+    color: #fff;
+    padding: 1.1rem 1.25rem;
+    border-bottom: 0;
+    position: static;
+}
+#modalLogin .modal-header-inspection h3 {
+    color: #fff;
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: -.01em;
+}
+#modalLogin .close-modal-btn {
+    background: rgba(255,255,255,.15);
+    color: #fff;
+    width: 32px;
+    height: 32px;
+    font-size: 1.1rem;
+    line-height: 1;
+}
+#modalLogin .close-modal-btn:hover { background: rgba(255,255,255,.3); color: #fff; }
+
+/* Campos do formulário */
+#modalLogin .form-group { margin-bottom: 1.1rem; }
+#modalLogin .form-group input,
+#modalLogin .form-group select {
+    width: 100%;
+    background: #f8fafc;
+    border: 1.5px solid var(--sabesp-border);
+    border-radius: 10px;
+    padding: 0.75rem 0.9rem;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: var(--text-primary);
+    transition: border-color .15s, box-shadow .15s, background .15s;
+}
+#modalLogin .form-group input:focus {
+    background: #fff;
+    border-color: var(--sabesp-primary);
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, .15);
+    outline: none;
+}
+#modalLogin .form-group label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-bottom: 0.4rem;
+}
+
+/* Botão principal do modal */
+#modalLogin .btn-primary {
+    background: linear-gradient(135deg, var(--sabesp-primary), var(--sabesp-primary-dark));
+    border-radius: 10px;
+    font-size: 0.95rem;
+    padding: 0.8rem 1rem;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, .35);
+}
+#modalLogin .btn-primary:hover { box-shadow: 0 6px 20px rgba(2, 132, 199, .45); }
+
+/* Botão secundário do modal */
+#modalLogin .btn-secondary {
+    border-radius: 10px;
+    font-size: 0.9rem;
+    padding: 0.7rem 1rem;
+    border: 1.5px solid var(--sabesp-border);
+    color: var(--sabesp-navy);
+    background: #fff;
+}
+#modalLogin .btn-secondary:hover { border-color: var(--sabesp-primary); color: var(--sabesp-primary); background: #f0f9ff; }
+
+/* Links do modal */
+#modalLogin a { color: var(--sabesp-primary); font-weight: 600; }
+#modalLogin a:hover { text-decoration: underline; }
+
+/* Texto introdutório da recuperação */
+#modalLogin #abaAuthRecuperar p { color: var(--text-muted); }
+
+/* ══════════════════════════════════════════════
+   PORTAIS INSTITUCIONAIS — login Sabesp / Prefeitura
+   Páginas dedicadas: login-sabesp.html e login-prefeitura.html
+   ══════════════════════════════════════════════ */
+.portal-layout {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+}
+
+/* Painel esquerdo: identidade visual da instituição */
+.portal-brand {
+    background: linear-gradient(150deg, var(--sabesp-navy) 0%, var(--sabesp-navy-dark) 55%, #0c4a6e 100%);
+    color: #fff;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+/* Decoracao de "ondas" de agua no fundo do painel */
+.portal-brand::after {
+    content: "";
+    position: absolute;
+    right: -90px;
+    bottom: -90px;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: rgba(6, 182, 212, .12);
+    pointer-events: none;
+}
+.portal-brand__logo { display: inline-flex; align-items: center; gap: .7rem; text-decoration: none; color: #fff; }
+.portal-brand__logo .brand-title { font-size: 1.5rem; font-weight: 800; letter-spacing: -.02em; color: #fff; text-transform: none; }
+.portal-brand__logo .brand-subtitle { font-size: .72rem; opacity: .75; color: rgba(255, 255, 255, .8); }
+.portal-brand__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    background: rgba(255, 255, 255, .12);
+    border: 1px solid rgba(255, 255, 255, .22);
+    border-radius: 999px;
+    padding: .35rem .85rem;
+    font-size: .74rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    width: fit-content;
+}
+.portal-brand h1 { font-size: 2.1rem; font-weight: 800; margin: 1rem 0 .6rem; letter-spacing: -.02em; }
+.portal-brand__lead { font-size: .95rem; line-height: 1.6; color: rgba(255, 255, 255, .8); margin: 0 0 1.5rem; max-width: 42ch; }
+.portal-brand__features { list-style: none; margin: 0; padding: 0; display: grid; gap: .7rem; }
+.portal-brand__features li {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    font-size: .88rem;
+    color: rgba(255, 255, 255, .9);
+}
+.portal-brand__features li::before {
+    content: "✓";
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: rgba(52, 211, 153, .2);
+    color: #34d399;
+    font-size: .75rem;
+    font-weight: 800;
+}
+.portal-brand__back { font-size: .82rem; color: rgba(255, 255, 255, .65); text-decoration: none; }
+.portal-brand__back:hover { color: #fff; text-decoration: underline; }
+
+/* Acento de cor por instituição (Sabesp = azul, Prefeitura = roxo) */
+body[data-portal-role="PREFEITURA"] .portal-brand {
+    background: linear-gradient(150deg, #2e1065 0%, #4c1d95 55%, #6d28d9 100%);
+}
+body[data-portal-role="PREFEITURA"] .portal-brand::after { background: rgba(124, 58, 237, .18); }
+
+/* Painel direito: formulário de acesso */
+.portal-form-side {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem 1.5rem;
+    background: var(--sabesp-bg);
+}
+.portal-card {
+    width: 100%;
+    max-width: 400px;
+    background: #fff;
+    border: 1px solid var(--sabesp-border);
+    border-radius: 18px;
+    box-shadow: var(--shadow-lg);
+    padding: 2.25rem;
+    animation: modalEntrada .3s ease;
+}
+.portal-card h2 { margin: 0 0 .35rem; font-size: 1.35rem; color: var(--sabesp-navy); font-weight: 800; }
+.portal-card__subtitle { margin: 0 0 1.75rem; font-size: .87rem; color: var(--text-muted); line-height: 1.5; }
+.portal-card .form-group { margin-bottom: 1.1rem; }
+.portal-card .form-group input {
+    width: 100%;
+    background: #f8fafc;
+    border: 1.5px solid var(--sabesp-border);
+    border-radius: 10px;
+    padding: .75rem .9rem;
+    font-size: .95rem;
+    font-family: inherit;
+    color: var(--text-primary);
+    transition: border-color .15s, box-shadow .15s, background .15s;
+}
+.portal-card .form-group input:focus {
+    background: #fff;
+    border-color: var(--sabesp-primary);
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, .15);
+    outline: none;
+}
+.portal-submit {
+    width: 100%;
+    padding: .85rem;
+    margin-top: .4rem;
+    border-radius: 10px;
+    font-size: .97rem;
+    background: linear-gradient(135deg, var(--sabesp-primary), var(--sabesp-primary-dark));
+    box-shadow: 0 4px 14px rgba(2, 132, 199, .35);
+}
+.portal-submit:hover { box-shadow: 0 6px 20px rgba(2, 132, 199, .45); }
+body[data-portal-role="PREFEITURA"] .portal-submit {
+    background: linear-gradient(135deg, #7c3aed, #6d28d9);
+    box-shadow: 0 4px 14px rgba(124, 58, 237, .35);
+}
+body[data-portal-role="PREFEITURA"] .portal-submit:hover { box-shadow: 0 6px 20px rgba(124, 58, 237, .45); }
+
+/* Mensagens de erro/sucesso dentro do cartão */
+.portal-alert {
+    border-radius: 10px;
+    padding: .75rem .9rem;
+    font-size: .85rem;
+    font-weight: 600;
+    margin-bottom: 1.1rem;
+    line-height: 1.45;
+}
+.portal-alert--erro { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+.portal-alert--ok { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+
+/* Rodapé do cartão: links secundários */
+.portal-links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: .75rem;
+    margin-top: 1.4rem;
+    padding-top: 1.1rem;
+    border-top: 1px dashed var(--sabesp-border);
+    font-size: .82rem;
+}
+.portal-links a, .link-btn {
+    color: var(--sabesp-primary);
+    font-weight: 600;
+    text-decoration: none;
+    background: none;
+    border: 0;
+    padding: 0;
+    font-size: .82rem;
+    font-family: inherit;
+    cursor: pointer;
+}
+.portal-links a:hover, .link-btn:hover { text-decoration: underline; }
+
+/* ══════════════════════════════════════════════
+   ÁREA CORPORATIVA — escolha do portal
+   Página: corporativo.html
+   ══════════════════════════════════════════════ */
+.corp-page {
+    min-height: 100vh;
+    background:
+        radial-gradient(ellipse at top right, rgba(6, 182, 212, .1), transparent 55%),
+        var(--sabesp-bg);
+}
+.corp-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 1.4rem 1.5rem;
+}
+.corp-brand { display: flex; align-items: center; gap: .7rem; text-decoration: none; }
+.corp-brand .brand-title { font-size: 1.35rem; font-weight: 800; color: var(--sabesp-navy); text-transform: lowercase; }
+.corp-brand .brand-subtitle { font-size: .68rem; color: var(--text-muted); font-weight: 600; }
+.corp-back { font-size: .85rem; font-weight: 600; color: var(--text-muted); text-decoration: none; }
+.corp-back:hover { color: var(--sabesp-primary); }
+
+.corp-main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+    text-align: center;
+}
+.corp-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    background: var(--sabesp-navy);
+    color: #fff;
+    border-radius: 999px;
+    padding: .4rem 1rem;
+    font-size: .74rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+.corp-main h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--sabesp-navy);
+    margin: 1.1rem 0 .6rem;
+    letter-spacing: -.02em;
+}
+.corp-lead {
+    color: var(--text-muted);
+    font-size: .97rem;
+    line-height: 1.6;
+    max-width: 54ch;
+    margin: 0 auto 2.5rem;
+}
+
+/* Cartões de escolha de portal */
+.corp-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    text-align: left;
+}
+.corp-card {
+    background: #fff;
+    border: 2px solid var(--sabesp-border);
+    border-radius: 18px;
+    padding: 2rem 1.75rem;
+    text-decoration: none;
+    color: var(--text-primary);
+    display: flex;
+    flex-direction: column;
+    gap: .7rem;
+    box-shadow: var(--shadow);
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    animation: modalEntrada .3s ease;
+}
+.corp-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    text-decoration: none;
+}
+.corp-card--sabesp:hover { border-color: var(--role-sabesp); }
+.corp-card--prefeitura:hover { border-color: var(--role-pref); }
+.corp-card-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    font-size: 1.5rem;
+    background: #f0f9ff;
+    border: 1px solid var(--sabesp-border);
+}
+.corp-card--prefeitura .corp-card-icon { background: #f5f3ff; border-color: #ddd6fe; }
+.corp-card h2 { margin: .3rem 0 0; font-size: 1.2rem; color: var(--sabesp-navy); font-weight: 800; }
+.corp-card p { margin: 0; font-size: .87rem; color: var(--text-muted); line-height: 1.55; flex: 1; }
+.corp-card-cta { font-size: .88rem; font-weight: 700; margin-top: .5rem; }
+.corp-card--sabesp .corp-card-cta { color: var(--role-sabesp); }
+.corp-card--prefeitura .corp-card-cta { color: var(--role-pref); }
+
+/* Nota para cidadãos */
+.corp-citizen-note {
+    margin-top: 2.5rem;
+    background: #fff;
+    border: 1px dashed var(--sabesp-border);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    font-size: .9rem;
+    color: var(--text-secondary);
+}
+.corp-citizen-note a { color: var(--sabesp-primary); font-weight: 700; }
+
+@media(max-width: 700px) {
+    .corp-cards { grid-template-columns: 1fr; }
+    .corp-main h1 { font-size: 1.5rem; }
+    .corp-header { flex-wrap: wrap; }
+}
+
 @media(max-width: 900px) {
+    .portal-layout { grid-template-columns: 1fr; }
+    .portal-brand { padding: 2rem 1.5rem; gap: 1.5rem; }
+    .portal-brand h1 { font-size: 1.6rem; }
     .app-layout { flex-direction: column; height: auto; }
     .app-sidebar { width: 100%; flex: none; height: auto; }
     .app-main { overflow: visible; }

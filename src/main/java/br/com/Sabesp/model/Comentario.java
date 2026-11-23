@@ -7,6 +7,14 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * Entidade que representa um comentário publicado em um chamado. Permite que
+ * os perfis Cidadão, Sabesp e Prefeitura troquem informações e registrem o
+ * andamento do atendimento de um problema de esgoto.
+ *
+ * @author Equipe Sabesp
+ * @since 2026
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
